@@ -5,11 +5,12 @@ import { GlobalStyles } from "./GlobalStyles/GlobalStyles";
 
 function App() {
   const [theme, setTheme] = useState<boolean>(true);
+
   return (
     <>
       <GlobalStyles themes={theme} />
       <Header setTheme={setTheme} theme={theme} />
-      <User />
+      <User theme={theme} />
     </>
   );
 }

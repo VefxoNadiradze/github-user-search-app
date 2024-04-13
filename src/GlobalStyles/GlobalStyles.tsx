@@ -12,8 +12,9 @@ const GlobalStyles = createGlobalStyle<{ themes: boolean }>`
         font-family: "Space Mono", monospace;
         min-height: 100vh;
         background: ${(props) =>
-          props.theme ? "rgb(246, 248, 255)" : "rgb(20, 29, 47)"};
+          props.themes ? "rgb(246, 248, 255)" : "rgb(20, 29, 47)"};
           transition: 0.3s ease;
+
     }
 `;
 

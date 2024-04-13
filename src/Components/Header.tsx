@@ -2,6 +2,7 @@ import styled from "styled-components";
 import moomIcon from "/assets/icon-moon.svg";
 import sunIcon from "/assets/icon-sun.svg";
 import SearchIcon from "/assets/icon-search.svg";
+import { FormEvent } from "react";
 
 interface HeaderInterface {
   setTheme: React.Dispatch<React.SetStateAction<boolean>>;
@@ -9,6 +10,10 @@ interface HeaderInterface {
 }
 
 export default function Header({ setTheme, theme }: HeaderInterface) {
+  const handleFunction = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+  };
+
   return (
     <HeaderComponent>
       <div className="logo-themeButton">
@@ -24,13 +29,14 @@ export default function Header({ setTheme, theme }: HeaderInterface) {
         </div>
       </div>
 
-      <form>
+      <form onSubmit={handleFunction}>
         <img src={SearchIcon} alt="SearchIcon" className="searchIcon" />
         <input
           type="text"
           placeholder="Search GitHub username…"
           className={!theme ? "darkInput" : ""}
         />
+        <span className="ErrorSpan">No results</span>
         <button>Search</button>
       </form>
     </HeaderComponent>
@@ -38,6 +44,7 @@ export default function Header({ setTheme, theme }: HeaderInterface) {
 }
 
 const HeaderComponent = styled.header`
+  padding: 24px;
   max-width: 730px;
   margin: 144px auto 24px auto;
 
@@ -100,12 +107,25 @@ const HeaderComponent = styled.header`
       &::placeholder {
         color: rgb(75, 106, 155);
       }
+
+      @media screen and (max-width: 768px) {
+        padding: 24px 40px;
+        &::placeholder {
+          font-size: 13px;
+        }
+      }
     }
 
     .searchIcon {
       position: absolute;
       top: 50%;
       transform: translate(32px, -50%);
+
+      @media screen and (max-width: 768px) {
+        width: 17.68px;
+        height: 17.63px;
+        transform: translate(15px, -50%);
+      }
     }
 
     input {
@@ -137,6 +157,20 @@ const HeaderComponent = styled.header`
       font-weight: 700;
       line-height: 24px;
       cursor: pointer;
+
+      @media screen and (max-width: 768px) {
+        width: 84px;
+        height: 46px;
+      }
+    }
+
+    .ErrorSpan {
+      display: none;
+      position: absolute;
+      color: red;
+      right: 150px;
+      top: 50%;
+      transform: translateY(-50%);
     }
   }
 `;
