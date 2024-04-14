@@ -7,11 +7,36 @@ import { FormEvent } from "react";
 interface HeaderInterface {
   setTheme: React.Dispatch<React.SetStateAction<boolean>>;
   theme: boolean;
+  setUserSearch: React.Dispatch<React.SetStateAction<string>>;
+  userSearch: string;
+  setUser: React.Dispatch<React.SetStateAction<UserData | null>>;
+  setError: React.Dispatch<React.SetStateAction<string>>;
+  error: string;
 }
 
-export default function Header({ setTheme, theme }: HeaderInterface) {
-  const handleFunction = (event: FormEvent<HTMLFormElement>) => {
+export default function Header({
+  setTheme,
+  theme,
+  userSearch,
+  setUserSearch,
+  setUser,
+  error,
+  setError,
+}: HeaderInterface) {
+  const handleFunction = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    try {
+      let response = await fetch(`https://api.github.com/users/${userSearch}`);
+      let data = await response.json();
+
+      if (!response.ok) {
+        throw new Error("No results");
+      }
+      setError("");
+      setUser(data);
+    } catch (error: any) {
+      setError(error.message);
+    }
   };
 
   return (
@@ -35,8 +60,9 @@ export default function Header({ setTheme, theme }: HeaderInterface) {
           type="text"
           placeholder="Search GitHub username…"
           className={!theme ? "darkInput" : ""}
+          onChange={(e) => setUserSearch(e.target.value)}
         />
-        <span className="ErrorSpan">No results</span>
+        {error ? <span className="ErrorSpan">{error}</span> : ""}
         <button>Search</button>
       </form>
     </HeaderComponent>
@@ -44,7 +70,6 @@ export default function Header({ setTheme, theme }: HeaderInterface) {
 }
 
 const HeaderComponent = styled.header`
-  padding: 24px;
   max-width: 730px;
   margin: 144px auto 24px auto;
 
@@ -165,7 +190,6 @@ const HeaderComponent = styled.header`
     }
 
     .ErrorSpan {
-      display: none;
       position: absolute;
       color: red;
       right: 150px;
